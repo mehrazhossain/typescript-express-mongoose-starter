@@ -1,5 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import { createUserToDB, getUsersToDB } from "./user.service";
+import {
+  createUserToDB,
+  getUserByIdFromDB,
+  getUsersToDB,
+} from "./user.service";
+
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = req.body;
+
+  const user = await createUserToDB(data);
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+};
 
 export const getUsers = async (
   req: Request,
@@ -14,14 +33,13 @@ export const getUsers = async (
   });
 };
 
-export const createUser = async (
+export const getUserById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const data = req.body;
-
-  const user = await createUserToDB(data);
+  const { id } = req.params;
+  const user = await getUserByIdFromDB(id);
 
   res.status(200).json({
     status: "success",
